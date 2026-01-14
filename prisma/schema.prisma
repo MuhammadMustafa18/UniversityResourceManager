@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Resource {
+  id          String    @id @default(cuid())
+  name        String
+  type        String    
+  description String?
+  location    String?
+  status      String    @default("Available") 
+  bookings    Booking[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Booking {
+  id         String   @id @default(cuid())
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  userId     String   // Simplified for now
+  userName   String
+  startTime  DateTime
+  endTime  DateTime
+  purpose    String
+  status     String   @default("Pending") // Pending, Approved, Rejected, Cancelled
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
